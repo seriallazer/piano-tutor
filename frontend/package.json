@@ -1,10 +1,15 @@
 {
-  "name": "frontend",
+  "name": "piano-tutor",
   "private": true,
   "version": "0.1.235",
   "type": "module",
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+  },
   "scripts": {
     "dev": "vite",
+    "dev:ipad": "vite --host 0.0.0.0",
+    "midi:diagnose": "CLANG_MODULE_CACHE_PATH=/tmp/piano-midi-clang-cache SWIFT_MODULECACHE_PATH=/tmp/piano-midi-swift-cache xcrun swift ../scripts/midi-diagnostic.swift 20",
     "build": "tsc -b && vite build",
     "build:wasm": "../backend/scripts/build-wasm.sh",
     "subset-fonts": "node scripts/subset-fonts.mjs",
@@ -12,7 +17,6 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -47,7 +51,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-basic-ssl": "^2.1.4",
     "@vitejs/plugin-react": "^5.1.1",
-    "@vitest/ui": "^4.0.18",
     "eruda": "^3.4.3",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",

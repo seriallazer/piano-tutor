@@ -253,7 +253,7 @@ describe('App i18n — unsupported locale falls back to English (US2)', () => {
     );
     await waitFor(() => {
       expect(
-        screen.getByText('The open platform for musical practice'),
+        screen.getByText('A focused piano coach for every practice session'),
       ).toBeInTheDocument();
     });
 

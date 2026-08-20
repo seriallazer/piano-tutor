@@ -73,31 +73,31 @@ export function useMidiConnectivity(): MidiConnectivityState {
       requestMIDIAccess: (options?: { sysex?: boolean }) => Promise<MIDIAccess>;
     };
 
-    // Timeout promise — resolves to null after MIDI_CONNECTIVITY_TIMEOUT_MS
-    const timeoutPromise = new Promise<null>((resolve) => {
-      setTimeout(() => resolve(null), MIDI_CONNECTIVITY_TIMEOUT_MS);
-    });
+    // Show the touch fallback if permission is slow, but keep listening to the
+    // original request. Chrome can resolve it after the user answers the MIDI
+    // permission prompt; discarding that late result made a valid Casio look
+    // disconnected until the whole app was restarted.
+    const timeoutId = setTimeout(() => {
+      if (!cancelled) setConnected(false);
+    }, MIDI_CONNECTIVITY_TIMEOUT_MS);
 
-    Promise.race([nav.requestMIDIAccess({ sysex: false }), timeoutPromise])
-      .then((result) => {
+    nav.requestMIDIAccess({ sysex: false })
+      .then((access) => {
         if (cancelled) return;
-        if (result === null) {
-          // Timeout — set connected to false
-          setConnected(false);
-          return;
-        }
-        const access = result;
+        clearTimeout(timeoutId);
         midiAccess = access;
         setConnected(access.inputs.size > 0);
         access.addEventListener('statechange', handleStateChange);
       })
       .catch(() => {
+        clearTimeout(timeoutId);
         // Permission denied or other error — definitive "not connected"
         if (!cancelled) setConnected(false);
       });
 
     return () => {
       cancelled = true;
+      clearTimeout(timeoutId);
       if (midiAccess) {
         midiAccess.removeEventListener('statechange', handleStateChange);
       }

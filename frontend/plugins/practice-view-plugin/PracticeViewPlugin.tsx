@@ -46,6 +46,7 @@ import { measureRangeToTicks } from './measureRangeToTicks';
 import { ResultsOverlay } from './ResultsOverlay';
 import { useFreePractice } from './useFreePractice';
 import { useSavedPracticeManager } from './useSavedPracticeManager';
+import { PracticePianoKeyboard } from './PracticePianoKeyboard';
 import './PracticeViewPlugin.css';
 import { useTranslation } from '../../src/i18n';
 
@@ -131,6 +132,18 @@ export function PracticeViewPlugin({ context }: PracticeViewPluginProps) {
 
   // ─── MIDI connectivity tracking ────────────────────────────────────────────
   const { connected: midiConnected, supported: midiSupported } = useMidiConnectivity();
+  const [virtualInputEnabled, setVirtualInputEnabled] = useState(false);
+
+  // Keep the tutor usable before a cable is available and on iPad Safari,
+  // where Web MIDI is not exposed. A connected hardware keyboard remains the
+  // preferred default, so switch the touch fallback off as soon as it appears.
+  useEffect(() => {
+    if (!midiSupported || midiConnected === false) {
+      setVirtualInputEnabled(true);
+    } else if (midiConnected === true) {
+      setVirtualInputEnabled(false);
+    }
+  }, [midiConnected, midiSupported]);
 
   // ─── Two-tap seek-then-play state machine (mirrors play-score) ──────────────
   const [pendingPlay, setPendingPlay] = useState(false);
@@ -749,6 +762,12 @@ export function PracticeViewPlugin({ context }: PracticeViewPluginProps) {
   });
 
   const isLoaded = ['ready', 'playing', 'paused'].includes(playerState.status);
+  const currentTargetPitches = practiceState.notes[practiceState.currentIndex]
+    ? [
+        ...(practiceState.notes[practiceState.currentIndex].midiPitches as number[]),
+        ...((practiceState.notes[practiceState.currentIndex].sustainedPitches ?? []) as number[]),
+      ]
+    : [];
 
   // ─── Render ────────────────────────────────────────────────────────────────
 
@@ -832,8 +851,10 @@ export function PracticeViewPlugin({ context }: PracticeViewPluginProps) {
         })()}
         onPracticeToggle={handlePracticeToggle}
         showStaffPicker={false}
-        midiConnected={midiConnected}
-        midiSupported={midiSupported}
+        midiConnected={Boolean(midiConnected) || virtualInputEnabled}
+        midiSupported={midiSupported || virtualInputEnabled}
+        virtualInputEnabled={virtualInputEnabled}
+        onVirtualInputToggle={() => setVirtualInputEnabled((enabled) => !enabled)}
         metronomeActive={metronomeState.active}
         metronomeBeatIndex={metronomeState.beatIndex}
         metronomeIsDownbeat={metronomeState.isDownbeat}
@@ -917,6 +938,10 @@ export function PracticeViewPlugin({ context }: PracticeViewPluginProps) {
             autoScroll
           />
         </div>
+      )}
+
+      {virtualInputEnabled && !resultsOverlayVisible && (
+        <PracticePianoKeyboard targetPitches={currentTargetPitches} />
       )}
 
       {/* Results overlay — shown when practice finishes or on mid-session stop */}

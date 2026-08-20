@@ -41,6 +41,10 @@ test-results/
 playwright-report/
 *-analysis.txt
 
+# Local sheet-music intake artifacts (rendered pages, OCR, and unverified drafts)
+tmp/pdfs/
+tmp/score-intake/
+
 # External plugins (maintained in a separate private repository)
 plugins-external/
 # Built plugin ZIPs (build artifacts from plugins-external/)

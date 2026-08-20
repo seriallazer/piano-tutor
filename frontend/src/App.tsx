@@ -15,6 +15,7 @@ import { PluginNavEntry } from './components/plugins/PluginNavEntry'
 import { PluginManagerDialog } from './components/plugins/PluginManagerDialog'
 import { ListDialog } from './components/plugins/ListDialog'
 import { ScoreSelectorPlugin } from './components/plugins/ScoreSelectorPlugin'
+import { VIRTUAL_MIDI_EVENT } from './plugin-api/index'
 import type { PluginContext, PluginNoteEvent, GraditonePlugin, OpenListDialogOptions } from './plugin-api/index'
 import { subscribePracticeSaved } from './plugin-api/practiceSavedBus'
 import { PluginStaffViewer } from './plugin-api/PluginStaffViewer'
@@ -42,7 +43,6 @@ import { createDefaultConfig } from './utils/renderUtils'
 import { RenderConfigContext } from './contexts/RenderConfigContext'
 import { ProfileProvider } from './services/profiles/ProfileContext'
 import { ProfileIcon } from './components/ProfileIcon'
-import packageJson from '../package.json'
 import './App.css'
 
 // Expose the host's React instance on window so imported plugins loaded as Blob
@@ -182,6 +182,19 @@ function App() {
       _toneAdapter?.handleCC(cc.controller, cc.value);
     },
   })
+
+  // Route the multi-touch piano through the same plugin MIDI stream used by
+  // the Casio keyboard. This keeps scoring, playback and recording identical
+  // regardless of input source.
+  useEffect(() => {
+    const handleVirtualMidi = (event: Event) => {
+      const midiEvent = (event as CustomEvent<PluginNoteEvent>).detail
+      if (!midiEvent) return
+      midiPluginSubscribersRef.current.forEach(handler => handler(midiEvent))
+    }
+    window.addEventListener(VIRTUAL_MIDI_EVENT, handleVirtualMidi)
+    return () => window.removeEventListener(VIRTUAL_MIDI_EVENT, handleVirtualMidi)
+  }, [])
   
   // Mobile debug console (eruda) - enable with ?debug=true
   useEffect(() => {
@@ -474,20 +487,7 @@ function App() {
       <div className="app">
         <header className="app-header">
           <h1>
-            <span className="app-title-initial">G</span>raditone{' '}
-            <a 
-              href="https://github.com/graditone/graditone" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style={{ 
-                fontSize: '0.375em', 
-                color: '#999', 
-                fontWeight: 'normal',
-                textDecoration: 'none'
-              }}
-            >
-              v{packageJson.version}
-            </a>
+            <span className="app-title-initial">P</span>iano Tutor
           </h1>
         </header>
         <main style={{ 
@@ -511,20 +511,7 @@ function App() {
       <div className="app">
         <header className="app-header">
           <h1>
-            <span className="app-title-initial">G</span>raditone{' '}
-            <a 
-              href="https://github.com/graditone/graditone" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style={{ 
-                fontSize: '0.375em', 
-                color: '#999', 
-                fontWeight: 'normal',
-                textDecoration: 'none'
-              }}
-            >
-              v{packageJson.version}
-            </a>
+            <span className="app-title-initial">P</span>iano Tutor
           </h1>
         </header>
         <main style={{ 
@@ -647,22 +634,9 @@ function App() {
           <header className="app-header">
             <div className="app-header-brand">
               <div className="app-header-title-row">
-                <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Graditone logo" className="app-logo" />
+                <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Piano Tutor logo" className="app-logo" />
                 <h1>
-                  <span className="app-title-initial">G</span>raditone{' '}
-                  <a
-                    href="https://github.com/graditone/graditone"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      fontSize: '0.375em',
-                      color: '#999',
-                      fontWeight: 'normal',
-                      textDecoration: 'none'
-                    }}
-                  >
-                    v{packageJson.version}
-                  </a>
+                  <span className="app-title-initial">P</span>iano Tutor
                 </h1>
               </div>
               <p className="app-slogan">{t('header.slogan')}</p>
@@ -809,4 +783,3 @@ function App() {
 }
 
 export default App
-

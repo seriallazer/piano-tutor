@@ -162,17 +162,21 @@ export function useMidiInput(callbacks: UseMidiInputCallbacks): UseMidiInputResu
       }
     }
 
-    // ── Request MIDI access with timeout ───────────────────────────────────
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('MIDI access timed out')), MIDI_ACCESS_TIMEOUT_MS);
-    });
+    // ── Request MIDI access with recoverable timeout ───────────────────────
+    // The timeout updates the UI, but deliberately does not discard the
+    // request. Chrome may resolve it later after the permission prompt is
+    // answered; that late result must still attach the Casio event handlers.
+    const timeoutId = setTimeout(() => {
+      if (cancelled) return;
+      console.log('[useMidiInput] MIDI access timed out; still waiting for permission');
+      setError('MIDI access timed out');
+      setDevices([]);
+    }, MIDI_ACCESS_TIMEOUT_MS);
 
-    Promise.race([
-      navigator.requestMIDIAccess({ sysex: false }),
-      timeoutPromise,
-    ])
+    navigator.requestMIDIAccess({ sysex: false })
       .then((access) => {
         if (cancelled) return;
+        clearTimeout(timeoutId);
         accessRef.current = access;
         const initialDevices = accessToDevices(access);
         console.log('[useMidiInput] MIDI access granted, initial devices:', initialDevices.map(d => d.name));
@@ -188,18 +192,16 @@ export function useMidiInput(callbacks: UseMidiInputCallbacks): UseMidiInputResu
       })
       .catch((err: unknown) => {
         if (cancelled) return;
+        clearTimeout(timeoutId);
         console.log('[useMidiInput] MIDI access failed:', err);
-        if (err instanceof Error && err.message === 'MIDI access timed out') {
-          setError('MIDI access timed out');
-        } else {
-          setError('MIDI access denied');
-        }
+        setError('MIDI access denied');
         setDevices([]);
       });
 
     // ── Cleanup ────────────────────────────────────────────────────────────
     return () => {
       cancelled = true;
+      clearTimeout(timeoutId);
 
       // Clear all pending connect debounce timers
       connectTimersRef.current.forEach((timer) => clearTimeout(timer));

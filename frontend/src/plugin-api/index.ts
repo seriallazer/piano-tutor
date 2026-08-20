@@ -48,6 +48,9 @@ export type {
 
 export { PLUGIN_API_VERSION } from './types';
 
+// Browser-local MIDI input used by the touch piano fallback.
+export { VIRTUAL_MIDI_EVENT, emitVirtualMidi } from './virtualMidi';
+
 // Utility classes exposed to plugins (no API version bump — additive)
 export { ChordDetector } from '../utils/chordDetector';
 export type { ChordDetectorOptions, ChordResult } from '../utils/chordDetector';

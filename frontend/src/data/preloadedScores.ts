@@ -12,6 +12,18 @@
 export type { UserScore } from '../services/userScoreIndex';
 
 import type { DifficultyLevel } from '../types/score';
+import familyScores from './familyScores.json';
+
+interface FamilyScoreRecord {
+  id: string;
+  displayName: string;
+  filename: string;
+  difficulty: DifficultyLevel;
+  privateUse: boolean;
+  sourceNote: string;
+}
+
+const familyScoreCatalog = familyScores as ReadonlyArray<FamilyScoreRecord>;
 
 export interface PreloadedScore {
   id: string;
@@ -127,6 +139,17 @@ export const SCALE_SCORE_GROUP: ScoreGroup = {
   ],
 };
 
+/** Private scores prepared from family-owned sheet music. */
+export const FAMILY_SCORE_GROUP: ScoreGroup = {
+  id: 'family-scores',
+  displayName: 'Our Songs',
+  scores: familyScoreCatalog.map((score) => ({
+    id: score.id,
+    displayName: score.displayName,
+    path: `${base}scores/family/${score.filename}`,
+  })),
+};
+
 /**
  * The complete preloaded score catalog.
  * Groups with zero scores are filtered out automatically.
@@ -134,7 +157,7 @@ export const SCALE_SCORE_GROUP: ScoreGroup = {
  */
 export const PRELOADED_CATALOG: PreloadedCatalog = {
   ungrouped: PRELOADED_SCORES,
-  groups: [SCALE_SCORE_GROUP].filter((g) => g.scores.length > 0),
+  groups: [FAMILY_SCORE_GROUP, SCALE_SCORE_GROUP].filter((g) => g.scores.length > 0),
 };
 
 /**
@@ -150,4 +173,5 @@ export const PRELOADED_DIFFICULTY_LEVELS: Readonly<Record<string, DifficultyLeve
   'chopin-nocturne-op9-2': 3,
   'pachelbel-canon-d': 1,
   'star-sky-two-steps-from-hell': 2,
+  ...Object.fromEntries(familyScoreCatalog.map((score) => [score.id, score.difficulty])),
 };

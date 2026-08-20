@@ -162,7 +162,6 @@
   color: var(--ls-cta-bg, #4caf50);
   background: rgba(76, 175, 80, 0.1);
 }
-}
 
 .saved-practice-item__delete-btn:hover:not(:disabled) {
   color: var(--dialog-danger-text);

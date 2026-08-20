@@ -1,0 +1,4 @@
+interface:
+  display_name: "Piano Score Intake"
+  short_description: "Convert sheet scans into catalogued practice scores"
+  default_prompt: "Use $piano-score-intake to prepare this PDF or image as a validated MusicXML practice score and add it to the piano tutor catalogue."

@@ -75,6 +75,10 @@ export interface PracticeToolbarProps {
    * When false, shows "MIDI not supported" message instead of "no MIDI device".
    */
   midiSupported?: boolean;
+  /** Whether the built-in multi-touch piano is feeding the MIDI stream. */
+  virtualInputEnabled?: boolean;
+  /** Shows or hides the built-in multi-touch piano. */
+  onVirtualInputToggle?: () => void;
   // Metronome
   metronomeActive: boolean;
   metronomeBeatIndex: number;
@@ -122,6 +126,8 @@ export function PracticeToolbar({
   showStaffPicker,
   midiConnected,
   midiSupported = true,
+  virtualInputEnabled = false,
+  onVirtualInputToggle,
   metronomeActive,
   metronomeBeatIndex,
   metronomeIsDownbeat,
@@ -485,11 +491,23 @@ export function PracticeToolbar({
       {midiConnected && (
         <span
           className="practice-plugin__midi-badge"
-          title={t('practice.toolbar.midi_connected_title')}
-          aria-label={t('practice.toolbar.midi_connected_aria')}
+          title={virtualInputEnabled ? 'Touch piano active' : t('practice.toolbar.midi_connected_title')}
+          aria-label={virtualInputEnabled ? 'Touch piano active' : t('practice.toolbar.midi_connected_aria')}
         >
-          🎹 MIDI
+          {virtualInputEnabled ? '⌨ Touch' : '🎹 MIDI'}
         </span>
+      )}
+
+      {onVirtualInputToggle && (
+        <button
+          type="button"
+          className={`practice-plugin__input-toggle${virtualInputEnabled ? ' practice-plugin__input-toggle--active' : ''}`}
+          aria-label={virtualInputEnabled ? 'Hide touch piano' : 'Show touch piano'}
+          aria-pressed={virtualInputEnabled}
+          onClick={onVirtualInputToggle}
+        >
+          {virtualInputEnabled ? 'Hide keys' : 'Touch keys'}
+        </button>
       )}
 
       {/* Feature 080: Profile icon — rightmost toolbar element */}

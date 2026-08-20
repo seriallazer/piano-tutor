@@ -47,11 +47,11 @@ export default defineConfig(({ command }) => {
       registerType: 'autoUpdate',  // Auto-install updates on reload
       includeAssets: ['favicon.ico', 'robots.txt', 'icons/*.png', 'wasm/*'],
       manifest: {
-        name: 'Graditone',
-        short_name: 'Graditone',
-        description: 'Tablet-native app for interactive scores, designed for practice and performance. Display scores, control tempo, navigate with ease - even offline.',
-        theme_color: '#6366f1',
-        background_color: '#1a1a1a',
+        name: 'Piano Tutor',
+        short_name: 'Piano Tutor',
+        description: 'A focused, offline-capable piano practice coach with MusicXML scores, MIDI feedback and touch-keyboard practice.',
+        theme_color: '#D9572B',
+        background_color: '#FFF8EC',
         display: 'standalone',
         orientation: 'any',
         // scope and start_url are automatically set by vite-plugin-pwa based on base path
@@ -95,7 +95,7 @@ export default defineConfig(({ command }) => {
             urlPattern: /\/api\/scores\/.*/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'graditone-scores-v2',
+              cacheName: 'piano-tutor-scores-v1',
               networkTimeoutSeconds: 3,
               expiration: {
                 maxEntries: 50,
@@ -109,7 +109,7 @@ export default defineConfig(({ command }) => {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
             handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: 'graditone-images-v2',
+              cacheName: 'piano-tutor-images-v1',
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
@@ -121,7 +121,7 @@ export default defineConfig(({ command }) => {
             urlPattern: /\.(?:woff|woff2|ttf|eot)$/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'graditone-fonts-v2',
+              cacheName: 'piano-tutor-fonts-v1',
               expiration: {
                 maxEntries: 10,
                 maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year

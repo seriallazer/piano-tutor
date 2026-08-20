@@ -1,4 +1,58 @@
-# 🎵 Graditone
+# 🎹 Piano Tutor
+
+An iPad-first piano practice coach tailored for an 88-key Casio CDP-S300. It
+renders MusicXML scores, plays and loops passages, grades live notes/chords and
+note duration, saves practice results offline, and includes an 88-key multi-touch
+piano so the complete practice flow works before a USB MIDI cable is available.
+
+## Current working loop
+
+1. Open **Practice** and choose a bundled piece or import `.mxl`, `.musicxml`, or `.xml`.
+2. Select right hand, left hand, or both hands and adjust tempo.
+3. Press **Practice**. Play the glowing target on the touch piano, or connect a
+   MIDI keyboard in a browser with Web MIDI support.
+4. Review correct, late, wrong, skipped, and duration results, replay the
+   performance, and save it locally.
+
+The PWA installs and works offline on iPad. iPad Safari does not expose USB MIDI,
+so hardware MIDI there will require the planned thin Core MIDI/Capacitor wrapper;
+the built-in touch piano remains fully functional in the web app.
+
+### Run locally
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+To test from an iPad on the same Wi-Fi network, run `npm run dev:ipad` and
+open the `Network` URL printed by Vite. The local HTTPS certificate is intended
+for development, so Safari may ask you to accept it the first time.
+
+To verify the CDP-S300 independently of the browser, connect and power it on,
+then run `npm run midi:diagnose` from `frontend`. The listener prints note-on,
+note-off, velocity and sustain-pedal messages received by macOS CoreMIDI.
+
+Production validation:
+
+```bash
+cd frontend
+npm run typecheck
+npm run lint
+npm run build
+npm test -- --run
+```
+
+## Open-source foundation
+
+Piano Tutor is built on the MIT-licensed Graditone project. The original engine,
+architecture notes and contributor documentation continue below and in the git
+history; the Graditone copyright and MIT license are preserved in `LICENSE`.
+
+---
+
+# 🎵 Graditone foundation
 
 **🚀 Live App**: [https://graditone.com/](https://graditone.com/)
 

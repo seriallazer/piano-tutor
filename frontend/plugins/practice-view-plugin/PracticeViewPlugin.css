@@ -95,6 +95,108 @@
   position: relative;
 }
 
+/* ─── Built-in touch piano ───────────────────────────────────────────────── */
+
+.practice-piano {
+  flex-shrink: 0;
+  background: #17202b;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.18);
+}
+
+.practice-piano__intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 14px;
+  font-size: 0.72rem;
+  color: #dbe5ef;
+}
+
+.practice-piano__hint {
+  color: #f7c873;
+}
+
+.practice-piano__scroll {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+.practice-piano__keys {
+  position: relative;
+  min-width: 2180px;
+  height: 132px;
+  margin: 0 10px 10px;
+  touch-action: pan-x;
+  user-select: none;
+}
+
+.practice-piano__white-row {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.practice-piano__key {
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  cursor: pointer;
+}
+
+.practice-piano__key--white {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  padding: 0;
+  border: 1px solid #9aa5b1;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, #ffffff 0%, #eef1f4 86%, #d7dde3 100%);
+  color: #536170;
+}
+
+.practice-piano__key--white span {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.practice-piano__key--black {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  width: 24px;
+  height: 78px;
+  padding: 0;
+  border: 1px solid #05080c;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, #111820, #263240 78%, #0c1117);
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.42);
+}
+
+.practice-piano__key--target.practice-piano__key--white {
+  background: linear-gradient(180deg, #fff8dc 0%, #f7c873 100%);
+  box-shadow: inset 0 0 0 3px #ef9f27;
+}
+
+.practice-piano__key--target.practice-piano__key--black {
+  background: linear-gradient(180deg, #6f4517 0%, #e59a2e 100%);
+  box-shadow: 0 0 0 2px #ffd98d, 0 4px 7px rgba(0, 0, 0, 0.38);
+}
+
+.practice-piano__key--active,
+.practice-piano__key--active:hover {
+  transform: translateY(3px);
+  background: #5ac481;
+  box-shadow: inset 0 0 0 3px #238a4b;
+}
+
 /* ─── Toolbar ─────────────────────────────────────────────────────────────── */
 
 .practice-plugin__toolbar {
@@ -175,6 +277,25 @@
 
 .practice-plugin__toolbar-btn--practice-active:hover:not(:disabled) {
   background: color-mix(in srgb, var(--ls-cta-bg, #1a4a9a) 80%, #000);
+}
+
+.practice-plugin__input-toggle {
+  min-height: 34px;
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--ls-heading, #333) 20%, transparent);
+  border-radius: 8px;
+  background: var(--ls-bg, #fff);
+  color: var(--ls-heading, #333);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.practice-plugin__input-toggle--active {
+  background: #17202b;
+  border-color: #17202b;
+  color: #fff;
 }
 
 /* Complete badge */
@@ -985,4 +1106,3 @@
   margin: 0.5rem 0 1rem;
   color: var(--ls-text-primary, #222);
 }
-

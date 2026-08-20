@@ -120,6 +120,14 @@ export function LandingScreen({ onShowInstruments, corePlugins, onLaunchPlugin, 
   const [colorIdx, setColorIdx] = useState(() =>
     Math.floor(Math.random() * activeColors.length)
   );
+  const modeOrder: Record<string, number> = {
+    'practice-view-plugin': 0,
+    'train-view': 1,
+    'play-score': 2,
+  };
+  const orderedCorePlugins = corePlugins
+    ? [...corePlugins].sort((a, b) => (modeOrder[a.id] ?? 99) - (modeOrder[b.id] ?? 99))
+    : [];
 
   // Pause/resume state — ref for rAF callbacks, state for aria/CSS
   const [paused, setPaused] = useState(false);
@@ -303,24 +311,71 @@ export function LandingScreen({ onShowInstruments, corePlugins, onLaunchPlugin, 
         {NOTE_GLYPHS[glyphIdx]}
       </span>
 
-      {/* Load score action — stop propagation so button click doesn't toggle pause */}
-      <div className="landing-actions" onClick={e => e.stopPropagation()}>
-        {corePlugins && corePlugins.length > 0 && onLaunchPlugin && corePlugins.map(p => (
-          <button
-            key={p.id}
-            data-testid={`plugin-launch-${p.id}`}
-            className="landing-plugin-btn"
-            onClick={() => {
-              trackEvent('cta_click', { action: 'launch_plugin', plugin_id: p.id });
-              onLaunchPlugin(p.id);
-            }}
-          >
-            {p.icon ? `${p.icon} ` : ''}{tDynamic(`plugin.name.${p.id}`, p.name)}
-          </button>
-        ))}
+      {/* Product dashboard — stop propagation so interaction never pauses the decoration. */}
+      <div className="landing-content" onClick={e => e.stopPropagation()}>
+        <div className="landing-hero" aria-labelledby="landing-headline">
+          <div>
+            <p className="landing-eyebrow">{t('landing.eyebrow')}</p>
+            <h2 id="landing-headline" className="landing-headline">{t('landing.headline')}</h2>
+            <p className="landing-body">{t('landing.body')}</p>
+          </div>
+          <div className="landing-session-card">
+            <span className="landing-session-card__label">{t('landing.plan_title')}</span>
+            <ol>
+              <li><span>3 min</span>{t('landing.plan_warmup')}</li>
+              <li><span>8 min</span>{t('landing.plan_focus')}</li>
+              <li><span>4 min</span>{t('landing.plan_review')}</li>
+            </ol>
+          </div>
+        </div>
+
+        <div className="landing-mode-grid" aria-label={t('landing.modes_aria')}>
+          {orderedCorePlugins.length > 0 && onLaunchPlugin && orderedCorePlugins.map((plugin) => {
+            const isPractice = plugin.id === 'practice-view-plugin';
+            const descriptions: Record<string, string> = {
+              'practice-view-plugin': t('landing.mode.practice'),
+              'train-view': t('landing.mode.train'),
+              'play-score': t('landing.mode.play'),
+            };
+            const kickers: Record<string, string> = {
+              'practice-view-plugin': t('landing.mode.practice_kicker'),
+              'train-view': t('landing.mode.train_kicker'),
+              'play-score': t('landing.mode.play_kicker'),
+            };
+            return (
+              <button
+                key={plugin.id}
+                data-testid={`plugin-launch-${plugin.id}`}
+                className={`landing-mode-card${isPractice ? ' landing-mode-card--primary' : ''}`}
+                onClick={() => {
+                  trackEvent('cta_click', { action: 'launch_plugin', plugin_id: plugin.id });
+                  onLaunchPlugin(plugin.id);
+                }}
+              >
+                <span className="landing-mode-card__icon" aria-hidden="true">{plugin.icon}</span>
+                <span className="landing-mode-card__copy">
+                  <span className="landing-mode-card__kicker">{kickers[plugin.id] ?? t('landing.mode.explore')}</span>
+                  <strong>{tDynamic(`plugin.name.${plugin.id}`, plugin.name)}</strong>
+                  <span>{descriptions[plugin.id] ?? plugin.name}</span>
+                </span>
+                <span className="landing-mode-card__arrow" aria-hidden="true">→</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <aside className="landing-device-strip" aria-label={t('landing.device_aria')}>
+          <span className="landing-device-strip__status" aria-hidden="true" />
+          <div>
+            <strong>{t('landing.device_title')}</strong>
+            <span>{t('landing.device_body')}</span>
+          </div>
+          <span className="landing-device-strip__badge">CDP-S300 · 88 keys</span>
+        </aside>
+
         {onShowInstruments && (
-          <button 
-            className="landing-instruments-btn" 
+          <button
+            className="landing-instruments-btn"
             onClick={() => {
               trackEvent('cta_click', { action: 'show_instruments' });
               onShowInstruments();
