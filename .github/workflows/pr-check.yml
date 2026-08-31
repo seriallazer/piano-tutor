@@ -2,9 +2,9 @@ name: Validation
 
 on:
   push:
-    branches: [ main ]
+    branches: [ portfolio ]
   pull_request:
-    branches: [ main ]
+    branches: [ portfolio ]
     paths:
       - 'frontend/**'
       - 'backend/**'
