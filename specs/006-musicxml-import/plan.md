@@ -274,7 +274,7 @@ Updated `.github/agents/copilot-instructions.md` with:
 **Status**: ✅ Phase 0 (Research) and Phase 1 (Design) complete. Ready for `/speckit.tasks`.
 
 **Branch**: `006-musicxml-import` (checked out)  
-**Spec Directory**: `/Users/alvaro.delcastillo/devel/sdd/musicore/specs/006-musicxml-import/`  
+**Spec Directory**: `specs/006-musicxml-import/`
 **Plan File**: This file (`plan.md`)
 
 ---

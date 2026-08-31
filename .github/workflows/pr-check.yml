@@ -1,14 +1,51 @@
-name: PR Validation
+name: Validation
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
     paths:
       - 'frontend/**'
       - 'backend/**'
+      - '.agent/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'docs/pdfs/**'
+      - 'scores/family/**'
+      - 'frontend/src/data/familyScores*.json'
+      - 'docs/PUBLIC_RELEASE.md'
       - '.github/workflows/pr-check.yml'
+  workflow_dispatch:
 
 jobs:
+  public-release-boundary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout complete history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reject private catalogue paths
+        run: python3 scripts/check_public_tree.py --history
+
+  validate-score-intake:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run score-intake tests
+        run: python -m unittest discover -s tests/score_intake
+
   validate-frontend:
     runs-on: ubuntu-latest
     

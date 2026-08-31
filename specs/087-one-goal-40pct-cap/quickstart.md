@@ -17,7 +17,7 @@ This feature adds a 40% per-goal time cap to session generation when multiple `l
 The `plugins-external/` directory must be cloned into the worktree before starting:
 
 ```bash
-cd /Users/alvaro.delcastillo/devel/graditone/.worktrees/087-one-goal-40pct-cap
+cd /path/to/graditone/.worktrees/087-one-goal-40pct-cap
 git clone git@github.com:aylabs/graditone-pro-plugins.git plugins-external
 cd plugins-external
 git checkout -b 087-one-goal-40pct-cap

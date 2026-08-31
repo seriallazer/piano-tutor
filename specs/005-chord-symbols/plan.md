@@ -208,5 +208,5 @@ This will generate [`tasks.md`](tasks.md) with:
 **Status**: Ready for task breakdown phase.
 
 **Branch**: `005-chord-symbols` (already created)  
-**Spec Directory**: `/Users/alvaro.delcastillo/devel/sdd/musicore/specs/005-chord-symbols/`  
+**Spec Directory**: `specs/005-chord-symbols/`
 **Plan File**: This file (`plan.md`)

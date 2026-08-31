@@ -17,7 +17,7 @@
   "maskableIconUrl": "https://graditone.com/icons/icon-512x512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "/Users/alvaro.delcastillo/devel/sdd/musicore/graditone-release.keystore",
+    "path": "android/app/graditone-release.keystore",
     "alias": "graditone-release"
   },
   "appVersionName": "0.1.99",

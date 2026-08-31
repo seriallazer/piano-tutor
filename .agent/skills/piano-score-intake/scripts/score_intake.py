@@ -589,7 +589,7 @@ def catalogue(args: argparse.Namespace) -> int:
     shutil.copy2(source, destination)
     shutil.copy2(provenance_path, score_dir / f"{slug}.provenance.json")
 
-    catalog_path = root / "frontend" / "src" / "data" / "familyScores.json"
+    catalog_path = root / "frontend" / "src" / "data" / "familyScores.private.json"
     catalog = read_json(catalog_path) if catalog_path.exists() else []
     if not isinstance(catalog, list):
         raise SystemExit(f"Expected a JSON array in {catalog_path}")
@@ -614,7 +614,7 @@ def status(args: argparse.Namespace) -> int:
     root = Path(args.project_root).expanduser().resolve()
     intake_root = root / "tmp" / "score-intake"
     manifests = sorted(intake_root.glob("*/intake.json")) if intake_root.exists() else []
-    catalog_path = root / "frontend" / "src" / "data" / "familyScores.json"
+    catalog_path = root / "frontend" / "src" / "data" / "familyScores.private.json"
     catalog = read_json(catalog_path) if catalog_path.exists() else []
     intakes = []
     for path in manifests:

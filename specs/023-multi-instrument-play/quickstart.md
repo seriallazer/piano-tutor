@@ -14,7 +14,7 @@
 
 ```bash
 # Clone and checkout
-cd /Users/alvaro.delcastillo/devel/sdd/musicore
+cd /path/to/graditone
 git checkout 023-multi-instrument-play
 
 # Backend: build and test

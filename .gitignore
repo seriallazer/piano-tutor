@@ -45,6 +45,20 @@ playwright-report/
 tmp/pdfs/
 tmp/score-intake/
 
+# Private practice catalogue inputs and outputs. These patterns protect future
+# files after the existing private blobs have been removed from Git history; an
+# ignore rule does not untrack a file that is already committed.
+docs/pdfs/
+scores/family/
+frontend/src/data/familyScores.json
+frontend/src/data/familyScores.private.json
+recordings/
+practice-recordings/
+
+# Local-only credentials not covered above
+*.pem
+*.p12
+
 # External plugins (maintained in a separate private repository)
 plugins-external/
 # Built plugin ZIPs (build artifacts from plugins-external/)

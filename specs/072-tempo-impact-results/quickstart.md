@@ -9,7 +9,7 @@
 
 ```bash
 # From the worktree root
-cd /Users/alvaro.delcastillo/devel/worktrees/072-tempo-impact-results/frontend
+cd /path/to/graditone/frontend
 
 # Install dependencies (if not already done)
 npm install

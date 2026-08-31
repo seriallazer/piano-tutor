@@ -1,84 +1,45 @@
-name: Deploy PWA to GitHub Pages
+name: Deploy Piano Tutor PWA
 
+# Deployment is intentionally manual in the fork. The upstream workflow
+# force-pushed version-bump commits and tags on every main-branch push, which is
+# unsafe for a portfolio fork and for a remote that may still point upstream.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      base_path:
+        description: "Vite base path, for example /piano_tutor/ or / for a custom domain"
+        required: true
+        default: "/piano_tutor/"
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write  # Needed to commit version bump and create tags
+  contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch full history for version tagging
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      # ========================================
-      # Stage 0: Auto-bump version on main
-      # ========================================
-      - name: Setup Node.js for version bump
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+      - name: Check public-release boundary
+        run: python3 scripts/check_public_tree.py --history
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Bump version and create tag
-        id: version
-        working-directory: frontend
-        run: |
-          # Get current version
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
-          
-          # Bump patch version (0.1.0 -> 0.1.1, 0.1.1 -> 0.1.2, etc.)
-          npm version patch --no-git-tag-version
-          
-          # Get new version
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "New version: $NEW_VERSION"
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          
-          # Commit version bump
-          git add package.json package-lock.json
-          git commit -m "chore: bump version to v$NEW_VERSION [skip ci]"
-          
-          # Fetch latest remote state and force push our version bump
-          git fetch origin main
-          git push --force origin HEAD:main
-          
-          # Create and push tag
-          git tag "v$NEW_VERSION"
-          git push origin "v$NEW_VERSION"
-          
-          echo "✅ Version bumped from $CURRENT_VERSION to $NEW_VERSION"
-
-      # ========================================
-      # Stage 1: Build WASM Module (Rust)
-      # ========================================
-      - name: Setup Rust toolchain
+      - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.93
+          toolchain: "1.93"
 
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
@@ -98,42 +59,33 @@ jobs:
         working-directory: backend
         run: wasm-pack build --target web --out-dir pkg --release
 
-      # ========================================
-      # Stage 2: Build Frontend (Node.js)
-      # ========================================
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: npm
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
 
-      - name: Copy WASM artifacts to frontend
+      - name: Copy WASM artifacts
         run: |
           mkdir -p frontend/public/wasm
           cp backend/pkg/musicore_backend_bg.wasm frontend/public/wasm/
           cp backend/pkg/musicore_backend.js frontend/public/wasm/
 
-      - name: Build frontend with PWA
+      - name: Build frontend
         working-directory: frontend
-        run: npm run build
         env:
-          # Set base path for GitHub Pages deployment
-          # If deploying to https://<username>.github.io/<repo>/
-          # Uncomment and set VITE_BASE if needed:
-          VITE_BASE: '/'
+          VITE_BASE: ${{ inputs.base_path }}
+        run: npm run build
 
-      # ========================================
-      # Stage 3: Deploy to GitHub Pages
-      # ========================================
-      - name: Setup Pages
+      - name: Set up Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist
@@ -141,22 +93,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      # ========================================
-      # ========================================
-      # Post-Deployment Verification
-      # ========================================
-      - name: Report deployment URL
-        run: |
-          echo "✅ PWA deployed successfully!"
-          echo "📦 Version: v${{ steps.version.outputs.version }}"
-          echo "🌐 URL: ${{ steps.deployment.outputs.page_url }}"
-          echo ""
-          echo "📱 To test PWA installation:"
-          echo "1. Open the URL on a tablet (iPad, Android, Surface)"
-          echo "2. For iOS: Tap Share → Add to Home Screen"
-          echo "3. For Android: Tap install prompt or menu → Install app"
-          echo ""
-          echo "🔍 Verify PWA assets:"
-          echo "- Manifest: ${{ steps.deployment.outputs.page_url }}manifest.webmanifest"
-          echo "- Service Worker: ${{ steps.deployment.outputs.page_url }}sw.js"

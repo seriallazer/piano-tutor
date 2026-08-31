@@ -1,14 +1,14 @@
 # Quickstart: Developing & Testing Feature 083
 
 **Branch**: `083-tempo-metronome-practice`  
-**Worktree**: `/Users/alvaro.delcastillo/devel/graditone/.worktrees/feature/083-tempo-metronome-practice`
+**Worktree**: `.worktrees/feature/083-tempo-metronome-practice`
 
 ---
 
 ## Prerequisites
 
 ```bash
-cd /Users/alvaro.delcastillo/devel/graditone/.worktrees/feature/083-tempo-metronome-practice/frontend
+cd /path/to/graditone/.worktrees/feature/083-tempo-metronome-practice/frontend
 npm install
 ```
 

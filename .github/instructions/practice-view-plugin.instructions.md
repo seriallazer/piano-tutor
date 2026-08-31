@@ -27,7 +27,9 @@ Timing MUST be deferred to the first MIDI note. `freeSessionActiveRef = true` ar
 
 ## Build in worktree
 
-`frontend/node_modules` does not exist in the worktree. To build, copy files to the main repo at `/Users/alvaro.delcastillo/devel/graditone` and run `cd frontend && npm run build`. Restore after.
+If `frontend/node_modules` does not exist in a linked worktree, install the
+frontend dependencies in that worktree before running the build. Do not copy
+worktree files into another checkout for validation.
 
 ## Commits
 

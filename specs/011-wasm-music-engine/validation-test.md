@@ -58,7 +58,7 @@ All commands should return 200 status and correct file sizes.
 ## T044: Small File Performance (<100ms) ⏸️ READY TO TEST
 
 **Test File**: `backend/music/1bar.musicxml` (920 lines, ~1 measure)  
-**Location**: `/Users/alvaro.delcastillo/devel/sdd/musicore/backend/music/1bar.musicxml`
+**Location**: `backend/music/1bar.musicxml`
 
 **Procedure**:
 1. **Clear browser cache** (see instructions above)
@@ -85,7 +85,7 @@ All commands should return 200 status and correct file sizes.
 ## T045: Large File Performance (<500ms) ⏸️ READY TO TEST
 
 **Test File**: `backend/music/Moonlight.musicxml` (79,160 lines, ~200 measures)  
-**Location**: `/Users/alvaro.delcastillo/devel/sdd/musicore/backend/music/Moonlight.musicxml`
+**Location**: `backend/music/Moonlight.musicxml`
 
 **Procedure**:
 1. Open http://localhost/ in browser (same session as T044 - WASM already loaded)

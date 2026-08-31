@@ -1,17 +1,8 @@
 name: Build Android AAB
 
 on:
-  push:
-    tags:
-      - 'v*'
-  # Also trigger when deploy-pwa.yml completes (it creates v* tags via GITHUB_TOKEN,
-  # which does not re-trigger push.tags events due to GitHub's loop-prevention policy).
-  workflow_run:
-    workflows: ["Deploy PWA to GitHub Pages"]
-    types:
-      - completed
-    branches:
-      - main
+  # Signed builds require repository secrets and are intentionally manual in
+  # this fork. Public pushes and Pages deployments must not trigger signing.
   workflow_dispatch:
     inputs:
       version_override:
@@ -26,9 +17,6 @@ jobs:
   build-android:
     name: Build signed release AAB
     runs-on: ubuntu-latest
-    # For workflow_run triggers: only run if the upstream workflow succeeded.
-    # For push/manual triggers: always run.
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       # ── Checkout ────────────────────────────────────────────────────────────

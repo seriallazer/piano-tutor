@@ -12,7 +12,6 @@
 export type { UserScore } from '../services/userScoreIndex';
 
 import type { DifficultyLevel } from '../types/score';
-import familyScores from './familyScores.json';
 
 interface FamilyScoreRecord {
   id: string;
@@ -23,7 +22,13 @@ interface FamilyScoreRecord {
   sourceNote: string;
 }
 
-const familyScoreCatalog = familyScores as ReadonlyArray<FamilyScoreRecord>;
+// Vite expands this optional local-only manifest at build time. A public clone
+// has no match and therefore bundles no private catalogue or score paths.
+const privateFamilyScoreModules = import.meta.glob<FamilyScoreRecord[]>(
+  './familyScores.private.json',
+  { eager: true, import: 'default' },
+);
+const familyScoreCatalog = Object.values(privateFamilyScoreModules)[0] ?? [];
 
 export interface PreloadedScore {
   id: string;
@@ -139,7 +144,7 @@ export const SCALE_SCORE_GROUP: ScoreGroup = {
   ],
 };
 
-/** Private scores prepared from family-owned sheet music. */
+/** Private scores are present only in a local build with the ignored manifest. */
 export const FAMILY_SCORE_GROUP: ScoreGroup = {
   id: 'family-scores',
   displayName: 'Our Songs',

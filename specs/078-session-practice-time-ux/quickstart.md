@@ -6,7 +6,7 @@
 
 ```bash
 # Worktree location
-cd /Users/alvaro.delcastillo/devel/worktrees/078-session-practice-time-ux
+cd /path/to/graditone
 
 # Clone sessions-plugin (if not already present in this worktree)
 git clone git@github.com:aylabs/graditone-pro-plugins.git plugins-external

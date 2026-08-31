@@ -11,7 +11,7 @@
 **Purpose**: Clone `plugins-external/sessions-plugin` into the worktree so session-plugin files
 are editable. Frontend files are available directly in the worktree.
 
-- [X] T001 Clone plugins-external into worktree: `git clone git@github.com:aylabs/graditone-pro-plugins.git plugins-external` from `/Users/alvaro.delcastillo/devel/worktrees/078-session-practice-time-ux`
+- [X] T001 Clone plugins-external into worktree: `git clone git@github.com:aylabs/graditone-pro-plugins.git plugins-external` from the repository worktree root
 - [X] T002 Create feature branch in plugins-external: `cd plugins-external && git checkout -b 078-session-practice-time-ux`
 - [X] T003 Install sessions-plugin dependencies: `cd plugins-external/sessions-plugin && npm install`
 

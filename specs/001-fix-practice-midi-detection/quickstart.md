@@ -8,7 +8,7 @@
 ## Prerequisites
 
 ```bash
-cd /Users/alvaro.delcastillo/devel/graditone/frontend
+cd /path/to/graditone/frontend
 node --version    # ≥ 18 required
 npm install       # install/sync deps if needed
 ```

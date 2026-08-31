@@ -136,7 +136,7 @@ See [quickstart.md](quickstart.md) for step-by-step TDD implementation guide.
 *Run after design artifacts are stable, before implementation.*
 
 ```bash
-cd /Users/alvaro.delcastillo/devel/graditone
+cd /path/to/graditone
 .specify/scripts/bash/update-agent-context.sh copilot
 ```
 
@@ -161,4 +161,3 @@ Re-evaluated against the completed design:
 | VII. Regression | ✅ PASS | `GoalCreationForm.test.tsx` regression guard added in step 5; `TaskRow.test.tsx` regression guard in step 6 |
 
 **Post-design gate**: PASS — design complete, ready for `/speckit.tasks`.
-

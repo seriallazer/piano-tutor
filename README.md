@@ -5,6 +5,39 @@ renders MusicXML scores, plays and loops passages, grades live notes/chords and
 note duration, saves practice results offline, and includes an 88-key multi-touch
 piano so the complete practice flow works before a USB MIDI cable is available.
 
+> **Fork disclosure:** This project is a personal, independently maintained fork
+> of [Graditone](https://github.com/graditone/graditone), based on upstream commit
+> [`c3425d4`](https://github.com/graditone/graditone/commit/c3425d49e28e32e857587b006197a29763aa7950)
+> (`v0.1.235`). Graditone provides the original score engine, renderer, plugin
+> architecture, and PWA foundation. The additions in this fork are described
+> below; the upstream MIT copyright and license remain in [`LICENSE`](LICENSE).
+
+## What this fork adds
+
+- An 88-key, multi-touch piano inside the practice view, including keyboard
+  scrolling, note labels, and direct integration with the practice engine.
+- A Web MIDI input path and a macOS Core MIDI diagnostic utility for testing a
+  physical Casio CDP-S300 independently of the browser.
+- A learner-focused landing and practice flow with instrument-first messaging,
+  clearer controls, and offline/iPad-oriented setup guidance.
+- Local-first sheet-music intake tooling: source hashing, OCR-assisted metadata,
+  structural MusicXML validation, deterministic event comparison, visual-review
+  records, importer verification, and automated tests.
+
+The original Graditone implementation remains substantial. For an auditable
+boundary, treat commits at and before `c3425d4` as upstream history and review
+later commits for work specific to this fork. See
+[`docs/UPSTREAM_AND_ATTRIBUTION.md`](docs/UPSTREAM_AND_ATTRIBUTION.md) for the
+detailed attribution and asset notes.
+
+## Privacy boundary
+
+The public repository intentionally excludes family sheet-music scans,
+transcriptions, provenance records, and practice recordings. The intake tools
+are public; their inputs and outputs are not. If you create a fork, read
+[`docs/PUBLIC_RELEASE.md`](docs/PUBLIC_RELEASE.md) before pushing: deleting a
+private file in a new commit does **not** remove it from Git history.
+
 ## Current working loop
 
 1. Open **Practice** and choose a bundled piece or import `.mxl`, `.musicxml`, or `.xml`.

@@ -1,7 +1,7 @@
 # Implementation Plan: Tempo Slider Range Extension & Practice Metronome Deferred Start
 
 **Branch**: `083-tempo-metronome-practice` | **Date**: 2026-04-25 | **Spec**: [spec.md](spec.md)  
-**Worktree**: `/Users/alvaro.delcastillo/devel/graditone/.worktrees/feature/083-tempo-metronome-practice`  
+**Worktree**: `.worktrees/feature/083-tempo-metronome-practice`
 **Input**: Feature specification from `/specs/083-tempo-metronome-practice/spec.md`
 
 ## Summary

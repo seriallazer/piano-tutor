@@ -10,7 +10,7 @@
 All work happens in the worktree. Always `cd` into it first:
 
 ```bash
-cd /Users/alvaro.delcastillo/devel/worktrees/077-arabesque-goal-review
+cd /path/to/graditone
 ```
 
 ---
@@ -38,7 +38,7 @@ cargo test test_parse_arabesque_produces_phrases -- --nocapture 2>&1
 **Analyze Arabesque phrase structure manually:**
 
 ```bash
-cd /Users/alvaro.delcastillo/devel/worktrees/077-arabesque-goal-review
+cd /path/to/graditone
 python3 scripts/analyze_arabesque_phrases.py
 ```
 

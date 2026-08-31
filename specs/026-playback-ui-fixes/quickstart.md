@@ -10,7 +10,7 @@
 ### Prerequisites
 
 ```bash
-cd /Users/alvaro.delcastillo/devel/sdd/musicore/frontend
+cd /path/to/graditone/frontend
 npm install   # already done
 ```
 
